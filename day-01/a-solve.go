@@ -15,19 +15,30 @@ func main() {
     scan := bufio.NewScanner(input)
 
     var highestCountCalories int
-    var count int
+    handleCount(scan, &highestCountCalories)
 
-    for scan.Scan() {
-        value, err := strconv.Atoi(scan.Text())
+    fmt.Println(highestCountCalories)
+}
+
+func handleCount(buffer *bufio.Scanner, highestCountCalories *int) {
+    var count int
+    testAndAssing := func () {
+        if (count > *highestCountCalories) {
+            *highestCountCalories = count
+        }
+        count = 0
+    }
+
+    // last input doesn't end with space so count is full at end
+    defer testAndAssing()
+
+    for buffer.Scan() {
+        value, err := strconv.Atoi(buffer.Text())
         if (err != nil) {
-            if (count > highestCountCalories) {
-                highestCountCalories = count
-            }
-            count = 0
+            testAndAssing()
         } else {
             count += value
         }
     }
-
-    fmt.Println(highestCountCalories)
 }
+

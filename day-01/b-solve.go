@@ -14,23 +14,34 @@ func main() {
 
     scan := bufio.NewScanner(input)
 
-    var topThreeCalories = make([]int, 3)
-    var count int
+    var topCalories = make([]int, 3)
 
-    for scan.Scan() {
-        value, err := strconv.Atoi(scan.Text())
-        if (err != nil) {
-            for place, calorie := range topThreeCalories {
-                if (calorie < count) {
-                    topThreeCalories[place] = count
-                    break
-                }
+    handleCount(scan, topCalories)
+
+    fmt.Println(topCalories[0] + topCalories[1] + topCalories[2])
+}
+
+func handleCount(buffer *bufio.Scanner, topCalories []int) {
+    var count int
+    testAndAssing := func () {
+        for place, calorie := range topCalories {
+            if (calorie < count) {
+                topCalories[place] = count
+                break
             }
-            count = 0
+        }
+        count = 0
+    }
+
+    // last input doesn't end with space so count is full at end
+    defer testAndAssing()
+
+    for buffer.Scan() {
+        value, err := strconv.Atoi(buffer.Text())
+        if (err != nil) {
+            testAndAssing()
         } else {
             count += value
         }
     }
-
-    fmt.Println(topThreeCalories[0] + topThreeCalories[1] + topThreeCalories[2])
 }
