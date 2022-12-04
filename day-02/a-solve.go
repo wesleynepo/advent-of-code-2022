@@ -27,26 +27,26 @@ func main() {
     var score int
 
     for scan.Scan() {
-        hand, result := parse(scan.Text())
+        left, right := parse(scan.Text())
 
-        score += hand.score(result)
+        score += right.value + right.compare(left)
     }
 
     fmt.Println(score)
 }
 
-func parse(text string) (Hand, string) {
-    return mapToHand(text[0:1]), text[2:3]
+func parse(text string) (Hand, Hand) {
+    return mapToHand(text[0:1]), mapToHand(text[2:3])
 }
 
 func mapToHand(letter string) Hand {
     switch {
-    case letter == "A":
-        return Hand{value: Rock, win:Scissor, lose: Paper}
-    case letter == "B":
-        return Hand{value: Paper, win:Rock, lose: Scissor}
-    case letter == "C":
-        return Hand{value: Scissor, win:Paper, lose: Rock}
+    case letter == "A" || letter == "X":
+        return Hand{value: Rock, winAgainst: Scissor}
+    case letter == "B" || letter == "Y":
+        return Hand{value: Paper, winAgainst: Rock}
+    case letter == "C" || letter == "Z":
+        return Hand{value: Scissor, winAgainst: Paper}
     default:
         panic("Error")
     }
@@ -54,17 +54,16 @@ func mapToHand(letter string) Hand {
 
 type Hand struct {
     value int
-    lose int
-    win int
+    winAgainst int
 }
 
-func (h Hand) score(result string) int {
-    switch result {
-    case "Z":
-        return h.lose + WIN
-    case "Y":
-        return h.value + TIE
+func (h Hand) compare(other Hand) int {
+    switch other.value {
+    case h.value:
+        return TIE
+    case h.winAgainst:
+        return WIN
     default:
-        return h.win + LOSS
+        return LOSS
     }
 }
