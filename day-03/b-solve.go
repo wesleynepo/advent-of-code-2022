@@ -26,10 +26,10 @@ func main() {
 
         for _, rune := range rucksacks[i] {
             if (elfOne[rune] && elfTwo[rune]) {
-                if (rune > 90) {
-                    totalPriority += int(rune) - 96
+                if (rune > 'Z') {
+                    totalPriority += int(rune) - 'a' + 1
                 } else {
-                    totalPriority += int(rune) - 38
+                    totalPriority += int(rune) - 'A' + 27
                 }
                 break
             }
