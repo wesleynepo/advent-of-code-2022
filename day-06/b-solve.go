@@ -6,6 +6,7 @@ import (
 	"os"
 )
 
+const MARKER_SIZE = 14
 
 func main() {
     input, _ := os.Open("./input")
@@ -16,32 +17,26 @@ func main() {
     var packets int
 
     for buffer.Scan() {
-        line := buffer.Text()
-
-        var found bool
-
-        for i := 0; i < len(line); i++ {
-            keys := make(map[string]bool)
-            found = false
-
-            for _, rune := range line[i:i+14] {
-                letter := string(rune)
-
-                if(keys[letter]) {
-                    found = true
-                    break
-                }
-
-                keys[letter] = true
-            }
-
-            if(!found) {
-                packets += (i + 14)
-                break
-            }
-        }
+        packets+= getMarker(buffer.Text())
     }
 
 
     fmt.Println(packets)
 }
+
+func getMarker(line string) int {
+    for i := 0; i < len(line); i++ {
+        keys := make(map[rune]bool)
+
+        for _, rune := range line[i:i+MARKER_SIZE] {
+            keys[rune] = true
+        }
+
+        if(len(keys) == MARKER_SIZE) {
+            return i + MARKER_SIZE
+        }
+    }
+
+    return 0
+}
+
