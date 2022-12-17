@@ -28,9 +28,24 @@ func main() {
             x += value
         }
     }
-    cycles = append(cycles, x)
 
-    fmt.Println(cycles)
+    cycles = append(cycles, x)
+    for i, v := range cycles {
+        current := i % 40
+        if (current == 39) {
+            fmt.Println(isVisible(current, v))
+        } else {
+            fmt.Print(isVisible(current, v))
+        }
+    }
 }
 
+
+func isVisible(crt int, cycle int) string {
+    if (crt >= cycle -1 && crt <= cycle +1) {
+        return "#"
+    }
+
+    return "."
+}
 
