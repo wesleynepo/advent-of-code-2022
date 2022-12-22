@@ -17,6 +17,7 @@ func main() {
     var start, end image.Point
     height := map[image.Point]rune{}
 
+    // Just create the grid
     count := 0
     for buffer.Scan() {
         for i, rune := range buffer.Text() {
@@ -31,15 +32,16 @@ func main() {
         count++
     }
 
+    // Convert start and end to the height they are
     height[start], height[end] = 'a', 'z'
 
+
     dist := map[image.Point]int{end: 0}
-    a, b := dist[image.Point{0,1}]
-    fmt.Println(a, b)
     queue := []image.Point{end}
     var shortest *image.Point
 
     for len(queue) > 0 {
+        fmt.Println(queue)
         cur := queue[0]
         queue = queue[1:]
 
