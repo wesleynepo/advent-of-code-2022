@@ -10,7 +10,7 @@ import (
 
 
 func main() {
-    input, _ := os.Open("./test")
+    input, _ := os.Open("./input")
     defer input.Close()
 
     buffer := bufio.NewScanner(input)
@@ -37,31 +37,9 @@ func main() {
             diff := value[i+1].Sub(value[i])
 
             if diff.X == 0 {
-                step := image.Point{0, 1}
-                if diff.Y < 0 {
-                    step = image.Point{0, -1}
-                }
-                current := value[i]
-
-                points[current] = "#"
-                for current != value[i+1] {
-                    current = current.Add(step)
-                    points[current] = "#"
-                }
-            }
-
-            if diff.Y == 0 {
-                step := image.Point{1, 0}
-                if diff.X < 0 {
-                    step = image.Point{-1, 0}
-                }
-                current := value[i]
-
-                points[current] = "#"
-                for current != value[i+1] {
-                    current = current.Add(step)
-                    points[current] = "#"
-                }
+                connect(points,value[i], value[i+1], image.Point{0,1}, diff.Y)
+            } else {
+                connect(points,value[i], value[i+1], image.Point{1,0}, diff.X)
             }
         }
     }
@@ -69,12 +47,13 @@ func main() {
     dirs := []image.Point{{0,1},{-1,1},{1,1}}
 
     count := 0
-    void := true
-    for void {
+    finished := false
+
+    for !finished {
         sand := image.Point{500,1}
         for true {
             if (sand.Y > lowest) {
-                void = false
+                finished = true
                 break
             }
 
@@ -84,14 +63,13 @@ func main() {
                 _, has := points[curr]
 
                 if (!has) {
-                    delete(points,sand)
                     sand = curr
                     break
                 }
             }
-            points[sand] = "O"
 
             if (before == sand) {
+                points[sand] = "O"
                 count++
                 break
             }
