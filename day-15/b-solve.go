@@ -41,6 +41,10 @@ func main() {
 
     for a := range acoef {
         for b := range bcoef {
+            if (a >= b || (b-a) % 2 != 0) {
+                continue
+            }
+
             p := image.Point{(b-a)/2, (a+b)/2}
             flawless := true
             if (p.X > 0 && p.X < bound && p.Y > 0 && p.Y < bound) {
